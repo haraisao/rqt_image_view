@@ -59,6 +59,8 @@ void ImageView::initPlugin(qt_gui_cpp::PluginContext& context)
   widget_ = new QWidget();
   ui_.setupUi(widget_);
 
+  std::string icon_dir = std::string(getenv("ROS_HOME"))+"/share/rqt_gui/resource/icons/";
+  std::string icon;
   if (context.serialNumber() > 1)
   {
     widget_->setWindowTitle(widget_->windowTitle() + " (" + QString::number(context.serialNumber()) + ")");
@@ -68,16 +70,17 @@ void ImageView::initPlugin(qt_gui_cpp::PluginContext& context)
   updateTopicList();
   ui_.topics_combo_box->setCurrentIndex(ui_.topics_combo_box->findText(""));
   connect(ui_.topics_combo_box, SIGNAL(currentIndexChanged(int)), this, SLOT(onTopicChanged(int)));
-
-  ui_.refresh_topics_push_button->setIcon(QIcon::fromTheme("view-refresh"));
+  icon = icon_dir +"view-refresh.png";
+  ui_.refresh_topics_push_button->setIcon(QIcon::fromTheme("view-refresh", QIcon(icon.c_str())));
   connect(ui_.refresh_topics_push_button, SIGNAL(pressed()), this, SLOT(updateTopicList()));
 
-  ui_.zoom_1_push_button->setIcon(QIcon::fromTheme("zoom-original"));
+  icon = icon_dir +"zoom-original.png";
+  ui_.zoom_1_push_button->setIcon(QIcon::fromTheme("zoom-original", QIcon(icon.c_str())));
   connect(ui_.zoom_1_push_button, SIGNAL(toggled(bool)), this, SLOT(onZoom1(bool)));
 
   connect(ui_.dynamic_range_check_box, SIGNAL(toggled(bool)), this, SLOT(onDynamicRange(bool)));
-
-  ui_.save_as_image_push_button->setIcon(QIcon::fromTheme("document-save-as"));
+  icon = icon_dir +"document-save-as.png";
+  ui_.save_as_image_push_button->setIcon(QIcon::fromTheme("document-save-as", QIcon(icon.c_str())));
   connect(ui_.save_as_image_push_button, SIGNAL(pressed()), this, SLOT(saveImage()));
 
   connect(ui_.num_gridlines_spin_box, SIGNAL(valueChanged(int)), this, SLOT(updateNumGridlines()));
@@ -99,8 +102,11 @@ void ImageView::initPlugin(qt_gui_cpp::PluginContext& context)
   connect(ui_.publish_click_location_topic_line_edit, SIGNAL(editingFinished()), this, SLOT(onPubTopicChanged()));
 
   connect(ui_.smooth_image_check_box, SIGNAL(toggled(bool)), ui_.image_frame, SLOT(onSmoothImageChanged(bool)));
-
+  icon = icon_dir +"object-rotate-left.png";
+  ui_.rotate_left_push_button->setIcon(QIcon::fromTheme("object-rotate-left", QIcon(icon.c_str())));
   connect(ui_.rotate_left_push_button, SIGNAL(clicked(bool)), this, SLOT(onRotateLeft()));
+  icon = icon_dir +"object-rotate-right.png";
+  ui_.rotate_right_push_button->setIcon(QIcon::fromTheme("object-rotate-right", QIcon(icon.c_str())));
   connect(ui_.rotate_right_push_button, SIGNAL(clicked(bool)), this, SLOT(onRotateRight()));
 
   // Make sure we have enough space for "XXX °"
